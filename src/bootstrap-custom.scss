@@ -1,0 +1,23 @@
+// $theme-colors: (
+//   "primary": rgba(255, 204, 50, 1)
+// );
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+@media screen and (max-width: 768px) {
+  .btn {
+    margin-top: 20px;
+    margin-right: 0px !important;
+  }
+
+  #search {
+    margin-top: 20px;
+    margin-bottom: 12px;
+  }
+}
+
+#logo {
+  font-family: "Pacifico", cursive;
+  font-size: 30pt;
+  padding: 0px;
+}

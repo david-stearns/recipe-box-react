@@ -1,0 +1,72 @@
+.view-container {
+  /* margin: 100px auto; */
+  margin: 0px auto;
+  width: 80vw;
+  max-width: 1200px;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.2rem 0px 0.2rem 0.2rem;
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+}
+
+.view-edit-button-container {
+  margin: 0px auto;
+  margin-top: 86px;
+  width: 80vw;
+
+  max-width: 1200px;
+  display: flex;
+  justify-content: flex-end;
+}
+.view-edit-tab {
+  min-width: 80px;
+  min-height: 34px;
+  background-color: white;
+  border-radius: 0.2rem 0.2rem 0px 0px;
+
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-bottom: none;
+  transform: translateY(1px);
+  display: flex;
+  justify-content: space-around;
+}
+
+.divider {
+  background-color: rgba(0, 0, 0, 0.125);
+  height: 1px;
+  width: 100%;
+  margin: 2% 0px;
+}
+
+.view-header {
+  display: flex;
+  width: 100%;
+}
+
+.view-title-card {
+  width: 38%;
+  margin-right: 2%;
+  justify-content: center;
+}
+
+.view-img {
+  width: 60%;
+  height: 26vw;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.view-body {
+  display: flex;
+  width: 100%;
+}
+
+.view-ingredients {
+  width: 40%;
+}
+
+.view-instructions {
+  white-space: pre-wrap;
+  width: 60%;
+}
