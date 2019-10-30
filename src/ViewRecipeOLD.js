@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
+import useInputState from "./hooks/useInputState";
 import Ingredient from "./Ingredient";
 import TitleBar from "./TitleBar";
 import Image from "react-bootstrap/Image";
@@ -14,30 +15,36 @@ import "./styles/view.css";
 
 function ViewRecipe({ recipe, history, updateRecipe }) {
   const [mode, setMode] = useState("view");
-  const [recipeView, setRecipeView] = useState(recipe);
-  const [recipeEdit, setRecipeEdit] = useState(recipe);
-  const [ingredientsEdit, setIngredientsEdit] = useState(recipe.ingredients);
+  const [title, handleTitleChange] = useInputState(recipe.title);
+  const [summary, handleSummaryChange] = useInputState(recipe.summary);
+  const [body, handleBodyChange] = useInputState(recipe.body);
+  const [ingredients, handleIngredientsChange] = useInputState(
+    recipe.ingredients
+  );
   const stars = getStars(recipe.rating);
+
+  const [editModeRecipe, setEditModeRecipe] = useState(recipe);
 
   function handleEditClick() {
     setMode("edit");
   }
 
   function handleEditComplete(saveChange) {
-    if (saveChange) {
-      setRecipeView(recipeEdit);
-      updateRecipe(recipeEdit);
+    console.log(saveChange);
+    if (saveChange === true) {
+      saveChanges();
     }
     setMode("view");
   }
 
-  function handleChange(e) {
-    setRecipeEdit({ ...recipeEdit, [e.target.name]: e.target.value });
+  function saveChanges() {
+    setEditModeRecipe({ ...editModeRecipe, title, summary, ingredients, body });
   }
 
-  function handleIngredientChange(ingredient) {
-    console.log(ingredient);
-  }
+  useEffect(() => {
+    // console.log(editModeRecipe);
+    updateRecipe(editModeRecipe);
+  }, [editModeRecipe]);
 
   let editButtons = "";
   mode === "view"
@@ -82,32 +89,22 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
         </>
       ));
 
-  let allIngredients = mode === "view" ? recipeView : recipeEdit;
-  allIngredients = allIngredients.ingredients.map(ingredient => {
-    return (
-      <Ingredient
-        ingredient={ingredient}
-        mode={mode}
-        handleIngredientChange={handleIngredientChange}
-      />
-    );
+  const allIngredients = recipe.ingredients.map(ingredient => {
+    return <Ingredient ingredient={ingredient} mode={mode} />;
   });
-
-  // const allIngredients = recipe.ingredients.map(ingredient => {
-  //   return <Ingredient ingredient={ingredient} mode={mode} />;
-  // });
 
   const recipeTitle =
     mode === "view" ? (
-      <h3>{recipeView.title}</h3>
+      <h3>{title}</h3>
     ) : (
       <InputGroup size="sm" className="mb-3">
         <FormControl
           aria-label=""
           aria-describedby=""
-          name="title"
-          value={recipeEdit.title}
-          onChange={handleChange}
+          value={title}
+          onChange={handleTitleChange}
+          // value={editModeRecipe.title}
+          // onChange={setEditModeRecipe}
           style={{ fontSize: "28px" }}
         />
       </InputGroup>
@@ -115,54 +112,47 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
 
   const recipeSummary =
     mode === "view" ? (
-      <p>{recipeView.summary}</p>
+      <p>{summary}</p>
     ) : (
-      <InputGroup sytle={{ height: "100%" }} size="sm" className="mb-3">
+      <InputGroup size="sm" className="mb-3">
         <FormControl
           as="textarea"
           aria-label=""
           aria-describedby=""
-          name="summary"
-          value={recipeEdit.summary}
-          onChange={handleChange}
-          style={{ minHeight: "300px" }}
+          value={summary}
+          onChange={handleSummaryChange}
+          style={{ height: "300px" }}
         />
       </InputGroup>
     );
 
   const recipeBody =
     mode === "view" ? (
-      <p>{recipeView.body}</p>
+      <p>{body}</p>
     ) : (
-      <InputGroup size="sm" className="mb-3" style={{ height: "90%" }}>
+      <InputGroup size="sm" className="mb-3">
         <FormControl
           as="textarea"
           aria-label=""
           aria-describedby=""
-          name="body"
-          value={recipeEdit.body}
-          onChange={handleChange}
+          value={body}
+          onChange={handleBodyChange}
         />
       </InputGroup>
     );
 
   const recipeImageURL = mode === "edit" && (
     <InputGroup size="sm" className="mb-3" style={{ marginTop: "12px" }}>
-      <InputGroup.Prepend>
-        <InputGroup.Text>Image URL</InputGroup.Text>
-      </InputGroup.Prepend>
       <FormControl
         aria-label=""
         aria-describedby=""
         placeholder="Image URL"
-        name="image"
-        value={recipeEdit.image}
-        onChange={handleChange}
+        value={""}
+        onChange={""}
       />
     </InputGroup>
   );
 
-  const image = mode === "view" ? recipeView.image : recipeEdit.image;
   return (
     <>
       <TitleBar history={history} view="view" />
@@ -174,8 +164,10 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
         <div className="view-container">
           <div className="view-header">
             <div className="view-title-card">
+              {/* <h3>{recipe.title}</h3> */}
               {recipeTitle}
               <h5>{stars}</h5>
+              {/* <p>{recipe.summary}</p> */}
               {recipeSummary}
             </div>
             <div
@@ -183,7 +175,7 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
               style={{ display: "flex", flexDirection: "column" }}
             >
               <Image
-                src={`${image}`}
+                src={`/${recipe.image}`}
                 className="view-img"
                 style={{ width: "100%" }}
               />
@@ -192,6 +184,7 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
           </div>
           <div className="divider"></div>
           <div className="view-body">
+            {/* <ViewIngredients ingredients={recipe.ingredients} mode={mode} /> */}
             <div className="view-ingredients">
               <h5>Ingredients</h5>
               <div>{allIngredients}</div>
@@ -205,6 +198,7 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
             </div>
             <div className="view-instructions">
               <h5>Preperation</h5>
+              {/* <p>{recipe.body}</p> */}
               {recipeBody}
             </div>
           </div>

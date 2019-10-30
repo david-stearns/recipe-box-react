@@ -63,7 +63,24 @@
 }
 
 .view-ingredients {
-  width: 40%;
+  width: 34%;
+  margin-right: 6%;
+}
+
+.view-ingredient-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+
+.view-ingredient-item-add-btn {
+  color: lightgrey;
+  font-size: 14pt;
+}
+.view-ingredient-item-add-btn:hover {
+  cursor: pointer;
+  color: grey;
 }
 
 .view-instructions {

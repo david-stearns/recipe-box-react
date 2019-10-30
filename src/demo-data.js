@@ -6,7 +6,7 @@ class Recipe {
     this.text = "";
     this.ingredients = [];
     this.id = id;
-    this.image = "images/food.png";
+    this.image = "/images/food.png";
     this.rating = 0;
     this.summary =
       "Some quick example text to build on the card title and make up the bulk of the card's content.";
@@ -16,7 +16,7 @@ class Recipe {
 let demoRecipes = [];
 let macAndCheese = new Recipe(uuid());
 macAndCheese.title = "Mac and Cheese";
-macAndCheese.image = "images/macandcheese.jpeg";
+macAndCheese.image = "/images/macandcheese.jpeg";
 macAndCheese.rating = 4;
 macAndCheese.body =
   "1. Cook macaroni according to the package directions. Drain.\n\n2. In a saucepan, melt butter or margarine over medium heat. Stir in enough flour to make a roux. Add milk to roux slowly, stirring constantly. Stir in cheeses, and cook over low heat until cheese is melted and the sauce is a little thick. Put macaroni in large casserole dish, and pour sauce over macaroni. Stir well.\n\n3. Melt butter or margarine in a skillet over medium heat. Add breadcrumbs and brown. Spread over the macaroni and cheese to cover. Sprinkle with a little paprika.\n\n4. Bake at 350 degrees F (175 degrees C) for 30 minutes. Serve.";
@@ -34,7 +34,7 @@ macAndCheese.ingredients = [
 
 let hummus = new Recipe(uuid());
 hummus.title = "Hummus";
-hummus.image = "images/hummus.jpeg";
+hummus.image = "/images/hummus.jpeg";
 hummus.rating = 5;
 hummus.body =
   "1. Add tahini, cold water, olive oil, cumin, salt, garlic and lemon juice to a food processor.  Puree until smooth.\n\n2. Add in the chickpeas.  Puree for 3-4 minutes, pausing halfway to scrape down the sides of the bowl, until the hummus is smooth.  If it seems too thick, add in another tablespoon or two of water.\n\n3. Taste and season with additional salt, cumin, and/or lemon juice if needed.\n\n4. Serve immediately, garnished with your desired toppings.  Or transfer to a sealed container and refrigerate for up to 3 days.";
@@ -51,7 +51,7 @@ hummus.ingredients = [
 
 let applePie = new Recipe(uuid());
 applePie.title = "Apple Pie";
-applePie.image = "images/applepie.jpeg";
+applePie.image = "/images/applepie.jpeg";
 applePie.rating = 3;
 applePie.body =
   "1. In a small bowl, combine the sugars, flour and spices; set aside. In a large bowl, toss apples with lemon juice. Add sugar mixture; toss to coat.\n\n2. Line a 9-in. pie plate with bottom crust; trim even with edge. Fill with apple mixture; dot with butter. Roll remaining crust to fit top of pie; place over filling. Trim, seal and flute edges. Cut slits in crust.\n\n3. Beat egg white until foamy; brush over crust. Sprinkle with sugar. Cover edges loosely with foil.\n\n4. Bake at 375° for 25 minutes. Remove foil and bake until crust is golden brown and filling is bubbly, 20-25 minutes longer. Cool on a wire rack.";
@@ -85,7 +85,7 @@ freshPasta.ingredients = [
 
 let cookies = new Recipe(uuid());
 cookies.title = "Chocolate Chip Cookes";
-cookies.image = "images/cookies.jpeg";
+cookies.image = "/images/cookies.jpeg";
 cookies.rating = 5;
 cookies.body =
   "1. Heat oven to 375°F. In small bowl, mix flour, baking soda and salt; set aside.\n\n2. In large bowl, beat butter, granulated sugar, and brown sugar with electric mixer on medium speed or mix with spoon about 1 minute or until fluffy, scraping side of bowl occasionally.\n\n3.Beat in egg and vanilla until smooth. Stir in flour mixture just until blended (dough will be stiff). Stir in chocolate chips and nuts.\n\n4. Drop dough by rounded tablespoonfuls about 2 inches apart onto ungreased cookie sheets.\n\n5. Bake 8 to 10 minutes or until light brown (centers will be soft). Cool 2 minutes; remove from cookie sheet to cooling rack. Cool completely, about 30 minutes. Store covered in airtight container.";
