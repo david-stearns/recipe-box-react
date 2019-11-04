@@ -87,3 +87,11 @@
   white-space: pre-wrap;
   width: 60%;
 }
+
+.add-toast {
+  margin: 20px;
+  position: fixed;
+  bottom: 0;
+  background-color: #343a40;
+  color: #fff;
+}

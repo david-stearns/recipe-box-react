@@ -4,18 +4,14 @@ import useLocalStorageState from "./hooks/useLocalStorageState";
 import "./bootstrap-custom.scss";
 import RecipeBox from "./RecipeBox";
 import ViewRecipe from "./ViewRecipe";
-import { demoRecipes } from "./demo-data";
+import { demoRecipes, demoIngredients } from "./demo-data";
 
 function App() {
-  // if (!JSON.parse(window.localStorage.getItem("recipes"))) {
-  //   window.localStorage.setItem("recipes", JSON.stringify(demoRecipes));
-  // }
-  //
-  // const [recipes, setRecipes] = useState(
-  //   JSON.parse(window.localStorage.getItem("recipes")) || demoRecipes
-  // );
-
   const [recipes, setRecipes] = useLocalStorageState("recipes", demoRecipes);
+  const [ingredients, setIngredients] = useLocalStorageState(
+    "ingredients",
+    demoIngredients
+  );
 
   function updateRecipe(newRecipe) {
     // console.log(newRecipe.title);
@@ -31,12 +27,45 @@ function App() {
     });
   }
 
+  function removeIngredient(idx) {
+    let newIngredients = [...ingredients];
+    newIngredients.splice(idx, 1);
+    setIngredients(newIngredients);
+  }
+
+  function addRecipeIngredients(id) {
+    let newIngredients = recipes.find(recipe => {
+      return recipe.id === id;
+    }).ingredients;
+    setIngredients(ingredients.concat(newIngredients));
+  }
+
+  function addSingleIngredient(ingredient) {
+    console.log(typeof ingredients);
+    console.log(ingredients);
+    setIngredients(ingredients.concat(ingredient));
+  }
+
+  function clearIngredients() {
+    setIngredients([]);
+    console.log(ingredients);
+  }
+
   return (
     <Switch>
       <Route
         path="/"
         exact
-        render={routeProps => <RecipeBox {...routeProps} recipes={recipes} />}
+        render={routeProps => (
+          <RecipeBox
+            {...routeProps}
+            recipes={recipes}
+            ingredients={ingredients}
+            removeIngredient={removeIngredient}
+            addRecipeIngredients={addRecipeIngredients}
+            clearIngredients={clearIngredients}
+          />
+        )}
       />
       <Route
         path="/recipe/:id"
@@ -46,6 +75,7 @@ function App() {
             {...routeProps}
             recipe={findRecipe(routeProps.match.params.id)}
             updateRecipe={updateRecipe}
+            addSingleIngredient={addSingleIngredient}
           />
         )}
       />

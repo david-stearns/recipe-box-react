@@ -48,8 +48,12 @@
 }
 
 .toast {
-  margin: 20px auto;
-
+  /* margin: 20px auto; */
+  margin: 20px;
+  position: fixed;
+  bottom: 76px;
+  left: 0;
+  z-index: 300;
   background-color: #343a40;
   color: #fff;
 }

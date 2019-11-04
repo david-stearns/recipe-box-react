@@ -1,30 +1,28 @@
 import React, { useState } from "react";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import uuid from "uuidv4";
-// import Ingredient from "./Ingredient";
 import Ingredients from "./Ingredients";
 import TitleBar from "./TitleBar";
+import EditStars from "./EditStars";
+import useToggle from "./hooks/useToggle";
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
+// import uuid from "uuidv4";
+
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
-import { getStars } from "./helpers.js";
+import Toast from "react-bootstrap/Toast";
+// import { getStars } from "./helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faWindowClose } from "@fortawesome/free-regular-svg-icons";
 import { faCheckSquare } from "@fortawesome/free-regular-svg-icons";
 import "./styles/view.css";
 
-function ViewRecipe({ recipe, history, updateRecipe }) {
+function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
   const [mode, setMode] = useState("view");
   const [recipeView, setRecipeView] = useState(recipe);
   const [recipeEdit, setRecipeEdit] = useState(recipe);
-  // const [ingredientsEdit, setIngredientsEdit] = useState(recipe.ingredients);
-  const [ingredientsEdit, setIngredientsEdit] = useState(
-    recipe.ingredients.map(ingredient => {
-      return { ingredient: ingredient, id: uuid() };
-    })
-  );
-  const stars = getStars(recipe.rating);
+  // const viewStars = getStars(recipe.rating);
+  const [showAddToast, setShowAddToast] = useToggle(false);
 
   function handleEditClick() {
     setMode("edit");
@@ -32,18 +30,37 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
 
   function handleEditComplete(saveChange) {
     if (saveChange) {
-      let newIng = ingredientsEdit.map(ingredient => {
-        return ingredient.ingredient;
-      });
-
-      setRecipeView({ ...recipeEdit, ingredients: newIng });
-      updateRecipe({ ...recipeEdit, ingredients: newIng });
+      setRecipeView(recipeEdit);
+      updateRecipe(recipeEdit);
     }
     setMode("view");
   }
 
   function handleChange(e) {
     setRecipeEdit({ ...recipeEdit, [e.target.name]: e.target.value });
+  }
+
+  function updateEditRating(rating) {
+    setRecipeEdit({ ...recipeEdit, rating });
+  }
+
+  function updateIngredients(index, ingredient) {
+    let newIngredients = recipeEdit.ingredients;
+    newIngredients[index] = ingredient;
+    setRecipeEdit({ ...recipeEdit, ingredients: newIngredients });
+  }
+
+  function addIngredient() {
+    let newIngredients = recipeEdit.ingredients;
+    newIngredients.push("");
+    setRecipeEdit({ ...recipeEdit, ingredients: newIngredients });
+  }
+
+  function deleteIngredient(index) {
+    console.log("delete", index);
+    let newIngredients = recipeEdit.ingredients;
+    newIngredients.splice(index, 1);
+    setRecipeEdit({ ...recipeEdit, ingredients: newIngredients });
   }
 
   let editButtons = "";
@@ -167,7 +184,12 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
           <div className="view-header">
             <div className="view-title-card">
               {recipeTitle}
-              <h5>{stars}</h5>
+              {/* <h5>{viewStars}</h5> */}
+              <EditStars
+                mode={mode}
+                rating={recipe.rating}
+                updateEditRating={updateEditRating}
+              />
               {recipeSummary}
             </div>
             <div
@@ -186,16 +208,21 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
           <div className="view-body">
             <div className="view-ingredients">
               <h5>Ingredients</h5>
-              {/* <div>{allIngredients}</div> */}
               <Ingredients
                 recipe={recipeEdit}
                 mode={mode}
-                setIngredientsEdit={setIngredientsEdit}
-                ingredients={ingredientsEdit}
+                updateIngredients={updateIngredients}
+                deleteIngredient={deleteIngredient}
+                addSingleIngredient={addSingleIngredient}
+                showToast={setShowAddToast}
               />
               {mode === "edit" && (
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  <Button variant="outline-dark" size="sm">
+                  <Button
+                    variant="outline-dark"
+                    size="sm"
+                    onClick={addIngredient}
+                  >
                     add +
                   </Button>
                 </div>
@@ -207,6 +234,15 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
             </div>
           </div>
         </div>
+        <Toast
+          show={showAddToast}
+          onClose={setShowAddToast}
+          className="add-toast"
+          delay={1500}
+          autohide
+        >
+          <Toast.Body>Added to List!</Toast.Body>
+        </Toast>
       </div>
     </>
   );
