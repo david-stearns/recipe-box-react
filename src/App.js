@@ -18,7 +18,7 @@ function App() {
   const [recipes, setRecipes] = useLocalStorageState("recipes", demoRecipes);
 
   function updateRecipe(newRecipe) {
-    console.log(newRecipe.title);
+    // console.log(newRecipe.title);
     const updatedRecipes = recipes.map(recipe => {
       return recipe.id === newRecipe.id ? newRecipe : recipe;
     });

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
-import Ingredient from "./Ingredient";
+import uuid from "uuidv4";
+// import Ingredient from "./Ingredient";
+import Ingredients from "./Ingredients";
 import TitleBar from "./TitleBar";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
@@ -16,7 +18,12 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
   const [mode, setMode] = useState("view");
   const [recipeView, setRecipeView] = useState(recipe);
   const [recipeEdit, setRecipeEdit] = useState(recipe);
-  const [ingredientsEdit, setIngredientsEdit] = useState(recipe.ingredients);
+  // const [ingredientsEdit, setIngredientsEdit] = useState(recipe.ingredients);
+  const [ingredientsEdit, setIngredientsEdit] = useState(
+    recipe.ingredients.map(ingredient => {
+      return { ingredient: ingredient, id: uuid() };
+    })
+  );
   const stars = getStars(recipe.rating);
 
   function handleEditClick() {
@@ -25,18 +32,18 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
 
   function handleEditComplete(saveChange) {
     if (saveChange) {
-      setRecipeView(recipeEdit);
-      updateRecipe(recipeEdit);
+      let newIng = ingredientsEdit.map(ingredient => {
+        return ingredient.ingredient;
+      });
+
+      setRecipeView({ ...recipeEdit, ingredients: newIng });
+      updateRecipe({ ...recipeEdit, ingredients: newIng });
     }
     setMode("view");
   }
 
   function handleChange(e) {
     setRecipeEdit({ ...recipeEdit, [e.target.name]: e.target.value });
-  }
-
-  function handleIngredientChange(ingredient) {
-    console.log(ingredient);
   }
 
   let editButtons = "";
@@ -81,21 +88,6 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
           </Button>
         </>
       ));
-
-  let allIngredients = mode === "view" ? recipeView : recipeEdit;
-  allIngredients = allIngredients.ingredients.map(ingredient => {
-    return (
-      <Ingredient
-        ingredient={ingredient}
-        mode={mode}
-        handleIngredientChange={handleIngredientChange}
-      />
-    );
-  });
-
-  // const allIngredients = recipe.ingredients.map(ingredient => {
-  //   return <Ingredient ingredient={ingredient} mode={mode} />;
-  // });
 
   const recipeTitle =
     mode === "view" ? (
@@ -194,7 +186,13 @@ function ViewRecipe({ recipe, history, updateRecipe }) {
           <div className="view-body">
             <div className="view-ingredients">
               <h5>Ingredients</h5>
-              <div>{allIngredients}</div>
+              {/* <div>{allIngredients}</div> */}
+              <Ingredients
+                recipe={recipeEdit}
+                mode={mode}
+                setIngredientsEdit={setIngredientsEdit}
+                ingredients={ingredientsEdit}
+              />
               {mode === "edit" && (
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <Button variant="outline-dark" size="sm">
