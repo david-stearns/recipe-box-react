@@ -8,6 +8,7 @@ class Recipe {
     this.id = id;
     this.image = "/images/food.png";
     this.rating = 0;
+    this.firstEdit = false;
     this.summary =
       "Some quick example text to build on the card title and make up the bulk of the card's content.";
   }
@@ -106,4 +107,4 @@ let demoIngredients = macAndCheese.ingredients;
 
 demoRecipes.push(macAndCheese, hummus, applePie, freshPasta, cookies);
 
-export { demoRecipes, demoIngredients };
+export { demoRecipes, demoIngredients, Recipe };

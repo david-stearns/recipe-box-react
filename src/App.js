@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
+import uuid from "uuidv4";
 import useLocalStorageState from "./hooks/useLocalStorageState";
 import "./bootstrap-custom.scss";
 import RecipeBox from "./RecipeBox";
 import ViewRecipe from "./ViewRecipe";
-import { demoRecipes, demoIngredients } from "./demo-data";
+import { Recipe, demoRecipes, demoIngredients } from "./demo-data";
 
 function App() {
   const [recipes, setRecipes] = useLocalStorageState("recipes", demoRecipes);
@@ -41,14 +42,20 @@ function App() {
   }
 
   function addSingleIngredient(ingredient) {
-    console.log(typeof ingredients);
-    console.log(ingredients);
     setIngredients(ingredients.concat(ingredient));
   }
 
   function clearIngredients() {
     setIngredients([]);
-    console.log(ingredients);
+  }
+
+  function deleteRecipe(id) {
+    const updatedRecipes = recipes.filter(recipe => {
+      return recipe.id !== id && recipe;
+      // if (recipe.id !== id) return recipe;
+    });
+    // console.log(updatedRecipes);
+    setRecipes(updatedRecipes);
   }
 
   return (
@@ -64,6 +71,7 @@ function App() {
             removeIngredient={removeIngredient}
             addRecipeIngredients={addRecipeIngredients}
             clearIngredients={clearIngredients}
+            setRecipes={setRecipes}
           />
         )}
       />
@@ -76,6 +84,7 @@ function App() {
             recipe={findRecipe(routeProps.match.params.id)}
             updateRecipe={updateRecipe}
             addSingleIngredient={addSingleIngredient}
+            deleteRecipe={deleteRecipe}
           />
         )}
       />

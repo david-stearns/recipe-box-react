@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 // import Toast from "react-bootstrap/Toast";
@@ -26,8 +26,6 @@ export default function Ingredients({
     showToast();
   }
 
-  // const [showAddToast, setShowAddToast] = useToggle(false);
-
   const allIngredients = recipe.ingredients.map((ingredient, index) => {
     return mode === "view" ? (
       <div className="view-ingredient-item">
@@ -36,7 +34,6 @@ export default function Ingredients({
           icon={faPlusCircle}
           className="view-ingredient-item-add-btn "
           onClick={() => handleAddToList(ingredient)}
-          // onClick={setShowAddToast}
         />
       </div>
     ) : (

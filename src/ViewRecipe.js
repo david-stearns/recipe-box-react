@@ -1,27 +1,31 @@
 import React, { useState } from "react";
 import Ingredients from "./Ingredients";
 import TitleBar from "./TitleBar";
+import SideDrawer from "./SideDrawer";
 import EditStars from "./EditStars";
 import useToggle from "./hooks/useToggle";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
-// import uuid from "uuidv4";
-
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import Toast from "react-bootstrap/Toast";
-// import { getStars } from "./helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faWindowClose } from "@fortawesome/free-regular-svg-icons";
 import { faCheckSquare } from "@fortawesome/free-regular-svg-icons";
+import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import "./styles/view.css";
 
-function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
-  const [mode, setMode] = useState("view");
+function ViewRecipe({
+  recipe,
+  history,
+  updateRecipe,
+  addSingleIngredient,
+  deleteRecipe
+}) {
+  const [mode, setMode] = useState(recipe.firstEdit ? "edit" : "view");
   const [recipeView, setRecipeView] = useState(recipe);
   const [recipeEdit, setRecipeEdit] = useState(recipe);
-  // const viewStars = getStars(recipe.rating);
   const [showAddToast, setShowAddToast] = useToggle(false);
 
   function handleEditClick() {
@@ -33,6 +37,7 @@ function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
       setRecipeView(recipeEdit);
       updateRecipe(recipeEdit);
     }
+    // setRecipeEdit(recipeView);
     setMode("view");
   }
 
@@ -45,7 +50,7 @@ function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
   }
 
   function updateIngredients(index, ingredient) {
-    let newIngredients = recipeEdit.ingredients;
+    let newIngredients = [...recipeEdit.ingredients];
     newIngredients[index] = ingredient;
     setRecipeEdit({ ...recipeEdit, ingredients: newIngredients });
   }
@@ -61,6 +66,11 @@ function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
     let newIngredients = recipeEdit.ingredients;
     newIngredients.splice(index, 1);
     setRecipeEdit({ ...recipeEdit, ingredients: newIngredients });
+  }
+
+  function handleDelete() {
+    deleteRecipe(recipe.id);
+    history.push("/");
   }
 
   let editButtons = "";
@@ -175,6 +185,13 @@ function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
   return (
     <>
       <TitleBar history={history} view="view" />
+      {/* <SideDrawer
+      // show={showList}
+      // expandMenu={expandMenu}
+      // ingredients={ingredients}
+      // removeIngredient={removeIngredient}
+      // clearIngredients={clearIngredients}
+      /> */}
       <div className="body-container">
         <div className="view-edit-button-container">
           <div className="view-edit-tab">{editButtons}</div>
@@ -184,10 +201,11 @@ function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
           <div className="view-header">
             <div className="view-title-card">
               {recipeTitle}
-              {/* <h5>{viewStars}</h5> */}
               <EditStars
+                // key={uuid()}
                 mode={mode}
                 rating={recipe.rating}
+                // rating={mode === "view" ? recipeView.rating : recipeEdit.rating}
                 updateEditRating={updateEditRating}
               />
               {recipeSummary}
@@ -209,7 +227,7 @@ function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
             <div className="view-ingredients">
               <h5>Ingredients</h5>
               <Ingredients
-                recipe={recipeEdit}
+                recipe={mode === "view" ? recipeView : recipeEdit}
                 mode={mode}
                 updateIngredients={updateIngredients}
                 deleteIngredient={deleteIngredient}
@@ -233,7 +251,22 @@ function ViewRecipe({ recipe, history, updateRecipe, addSingleIngredient }) {
               {recipeBody}
             </div>
           </div>
+          {mode === "edit" && (
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              style={{
+                maxWidth: "96px",
+                marginTop: "80px",
+                marginLeft: "auto"
+              }}
+            >
+              <FontAwesomeIcon icon={faTrashAlt} />
+              &nbsp; Delete
+            </Button>
+          )}
         </div>
+
         <Toast
           show={showAddToast}
           onClose={setShowAddToast}

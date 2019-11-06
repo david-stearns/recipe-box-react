@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import uuid from "uuidv4";
 import useToggle from "./hooks/useToggle";
 import TitleBar from "./TitleBar";
 import SideDrawer from "./SideDrawer";
 import RecipeGrid from "./RecipeGrid";
-import { demoIngredients } from "./demo-data";
+import { Recipe } from "./demo-data";
 
 function RecipeBox({
   recipes,
@@ -11,33 +12,19 @@ function RecipeBox({
   ingredients,
   removeIngredient,
   clearIngredients,
-  addRecipeIngredients
+  addRecipeIngredients,
+  setRecipes
 }) {
   const [showList, setShowList] = useToggle(false);
   const [expandMenu, setExpandMenu] = useToggle(false);
-  // const [ingredients, setIngredients] = useState(demoIngredients);
 
-  // function removeIngredient(idx) {
-  //   let newIngredients = [...ingredients];
-  //   newIngredients.splice(idx, 1);
-  //   setIngredients(newIngredients);
-  // }
-  //
-  // function addRecipeIngredients(id) {
-  //   let newIngredients = recipes.find(recipe => {
-  //     return recipe.id === id;
-  //   }).ingredients;
-  //   setIngredients(ingredients.concat(newIngredients));
-  // }
-  //
-  // function addSingleIngredient(ingredient) {
-  //   setIngredients(ingredients.push(ingredient));
-  // }
-  //
-  // function clearIngredients() {
-  //   setIngredients([]);
-  //   console.log(ingredients);
-  // }
+  function createNewRecipe() {
+    const newRecipeID = uuid();
+    let newRecipe = new Recipe(newRecipeID);
+    newRecipe.firstEdit = true;
+    setRecipes([...recipes, newRecipe]);
+    history.push(`/recipe/${newRecipeID}`);
+  }
 
   return (
     <>
@@ -46,6 +33,7 @@ function RecipeBox({
         handleExpandMenu={() => setExpandMenu()}
         view="main"
         history={history}
+        createNewRecipe={createNewRecipe}
       />
       <SideDrawer
         show={showList}

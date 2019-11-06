@@ -5,16 +5,23 @@ import Nav from "react-bootstrap/Nav";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import { faListUl } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faUtensils } from "@fortawesome/free-solid-svg-icons";
 
 function TitleBar({
   showList,
   handleShowList,
   handleExpandMenu,
   history,
-  view
+  view,
+  createNewRecipe
 }) {
+  function handleNew() {
+    console.log("test");
+  }
+
   return (
     <>
       <Navbar
@@ -34,15 +41,29 @@ function TitleBar({
         />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto">
+            {view !== "main" && (
+              <Button variant="primary" className="mr-2">
+                <FontAwesomeIcon icon={faPrint} style={{}} />
+              </Button>
+            )}
+
             <Button variant="primary" className="mr-2" onClick={handleShowList}>
-              <FontAwesomeIcon icon={faListUl} style={{}} onClick={showList} />
+              <FontAwesomeIcon
+                icon={faShoppingCart}
+                style={{}}
+                onClick={showList}
+              />
               &nbsp; List
             </Button>
 
             {view === "main" && (
               <>
-                <Button variant="primary" className="mr-2">
-                  <FontAwesomeIcon icon={faPlusSquare} style={{}} />
+                <Button
+                  variant="primary"
+                  className="mr-2"
+                  onClick={createNewRecipe}
+                >
+                  <FontAwesomeIcon icon={faUtensils} style={{}} />
                   &nbsp; New
                 </Button>
 
