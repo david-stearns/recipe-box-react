@@ -1,29 +1,30 @@
-import React, { useState } from "react";
-import uuid from "uuidv4";
+import React, { useState, useContext } from "react";
 import useToggle from "./hooks/useToggle";
 import TitleBar from "./TitleBar";
 import SideDrawer from "./SideDrawer";
 import RecipeGrid from "./RecipeGrid";
-import { Recipe } from "./demo-data";
+import { RecipeContext } from "./contexts/RecipeContext";
 
-function RecipeBox({
-  recipes,
-  history,
-  ingredients,
-  removeIngredient,
-  clearIngredients,
-  addRecipeIngredients,
-  setRecipes
-}) {
+function RecipeBox({ history }) {
+  const { recipes, createNewRecipe } = useContext(RecipeContext);
+
   const [showList, setShowList] = useToggle(false);
   const [expandMenu, setExpandMenu] = useToggle(false);
+  const [filteredRecipes, setFilteredRecipes] = useState(recipes);
 
-  function createNewRecipe() {
-    const newRecipeID = uuid();
-    let newRecipe = new Recipe(newRecipeID);
-    newRecipe.firstEdit = true;
-    setRecipes([...recipes, newRecipe]);
+  function handleCreateNewRecipe() {
+    const newRecipeID = createNewRecipe();
     history.push(`/recipe/${newRecipeID}`);
+  }
+
+  function searchRecipes(searchText) {
+    let filtered = [];
+    recipes.forEach(recipe => {
+      if (recipe.title.toLowerCase().includes(searchText.toLowerCase())) {
+        filtered.push(recipe);
+      }
+    });
+    setFilteredRecipes(filtered);
   }
 
   return (
@@ -33,21 +34,14 @@ function RecipeBox({
         handleExpandMenu={() => setExpandMenu()}
         view="main"
         history={history}
-        createNewRecipe={createNewRecipe}
+        createNewRecipe={handleCreateNewRecipe}
+        searchRecipes={searchRecipes}
       />
-      <SideDrawer
-        show={showList}
-        expandMenu={expandMenu}
-        ingredients={ingredients}
-        removeIngredient={removeIngredient}
-        clearIngredients={clearIngredients}
-      />
+      <SideDrawer show={showList} expandMenu={expandMenu} />
       <RecipeGrid
-        recipes={recipes}
+        recipes={filteredRecipes}
         expandMenu={expandMenu}
         expandList={showList}
-        addRecipeIngredients={addRecipeIngredients}
-        history={history}
       />
     </>
   );

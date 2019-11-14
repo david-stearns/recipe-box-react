@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { RecipeContext } from "./contexts/RecipeContext";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import Toast from "react-bootstrap/Toast";
@@ -10,13 +11,11 @@ import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import "./styles/SideDrawer.css";
 
-function SideDrawer({
-  ingredients,
-  expandMenu,
-  show,
-  removeIngredient,
-  clearIngredients
-}) {
+function SideDrawer({ expandMenu, show }) {
+  const { ingredients, removeIngredient, clearIngredients } = useContext(
+    RecipeContext
+  );
+
   const [showToast, setShowToast] = useToggle(false);
 
   let drawerClasses = "side-drawer";

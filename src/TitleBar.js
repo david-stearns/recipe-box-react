@@ -6,7 +6,6 @@ import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
-import { faListUl } from "@fortawesome/free-solid-svg-icons";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { faUtensils } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,10 +15,17 @@ function TitleBar({
   handleExpandMenu,
   history,
   view,
-  createNewRecipe
+  createNewRecipe,
+  searchRecipes
 }) {
-  function handleNew() {
-    console.log("test");
+  function handleTitleClick() {
+    history.location.pathname !== "/"
+      ? history.push(`/`)
+      : window.location.reload();
+  }
+
+  function handlePrint() {
+    window.print();
   }
 
   return (
@@ -32,7 +38,11 @@ function TitleBar({
         bg="dark"
         variant="dark"
       >
-        <Navbar.Brand id="logo" onClick={() => history.push(`/`)}>
+        <Navbar.Brand
+          id="logo"
+          onClick={handleTitleClick}
+          style={{ cursor: "pointer" }}
+        >
           Recipe Box
         </Navbar.Brand>
         <Navbar.Toggle
@@ -42,7 +52,7 @@ function TitleBar({
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto">
             {view !== "main" && (
-              <Button variant="primary" className="mr-2">
+              <Button variant="primary" className="mr-2" onClick={handlePrint}>
                 <FontAwesomeIcon icon={faPrint} style={{}} />
               </Button>
             )}
@@ -68,7 +78,13 @@ function TitleBar({
                 </Button>
 
                 <Form>
-                  <FormControl id="search" placeholder="Search..." />
+                  <FormControl
+                    id="search"
+                    placeholder="Search..."
+                    onChange={e => {
+                      searchRecipes(e.target.value);
+                    }}
+                  />
                 </Form>
               </>
             )}

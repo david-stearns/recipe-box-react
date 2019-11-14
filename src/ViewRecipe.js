@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { RecipeContext } from "./contexts/RecipeContext";
 import Ingredients from "./Ingredients";
 import TitleBar from "./TitleBar";
 import SideDrawer from "./SideDrawer";
@@ -16,13 +17,16 @@ import { faCheckSquare } from "@fortawesome/free-regular-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import "./styles/view.css";
 
-function ViewRecipe({
-  recipe,
-  history,
-  updateRecipe,
-  addSingleIngredient,
-  deleteRecipe
-}) {
+function ViewRecipe({ history, match }) {
+  const {
+    updateRecipe,
+    addSingleIngredient,
+    deleteRecipe,
+    findRecipe
+  } = useContext(RecipeContext);
+
+  const recipe = findRecipe(match.params.id);
+
   const [mode, setMode] = useState(recipe.firstEdit ? "edit" : "view");
   const [recipeView, setRecipeView] = useState(recipe);
   const [recipeEdit, setRecipeEdit] = useState(recipe);
@@ -37,7 +41,6 @@ function ViewRecipe({
       setRecipeView(recipeEdit);
       updateRecipe(recipeEdit);
     }
-    // setRecipeEdit(recipeView);
     setMode("view");
   }
 
@@ -202,10 +205,8 @@ function ViewRecipe({
             <div className="view-title-card">
               {recipeTitle}
               <EditStars
-                // key={uuid()}
                 mode={mode}
                 rating={recipe.rating}
-                // rating={mode === "view" ? recipeView.rating : recipeEdit.rating}
                 updateEditRating={updateEditRating}
               />
               {recipeSummary}
